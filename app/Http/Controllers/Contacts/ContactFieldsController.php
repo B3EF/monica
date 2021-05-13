@@ -48,15 +48,11 @@ class ContactFieldsController extends Controller
      */
     public function storeContactField(ContactFieldsRequest $request, Contact $contact)
     {
-        $contactField = $contact->contactFields()->create(
-            $request->only([
-                'contact_field_type_id',
-                'data',
-            ])
-            + [
-                'account_id' => auth()->user()->account_id,
-            ]
-        );
+        $contactField = $contact->contactFields()->create([
+            'account_id' => auth()->user()->account_id,
+            'contact_field_type_id' => htmlentities($request->input('contact_field_type_id'), ENT_QUOTES, 'utf-8');
+            'data' => htmlentities($request->input('data'), ENT_QUOTES, 'utf-8');
+        ]);
 
         GetAvatarsFromInternet::dispatch($contact);
 
